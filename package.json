@@ -1,0 +1,56 @@
+{
+  "name": "kamilbot",
+  "version": "0.1.0",
+  "description": "Kamil bot for Telegram",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build",
+    "build:debug": "tsc --build && tsc --sourceMap",
+    "dev": "tsc-watch --onSuccess \"node --experimental-loader=extensionless dist/index.js\"",
+    "start": "node --experimental-loader=extensionless dist/index.js",
+    "lint": "eslint src/**/*.{js,ts}",
+    "lint:fix": "eslint --fix src/**/*.{js,ts}",
+    "format": "prettier --check src/**/*.{js,ts}",
+    "format:fix": "prettier --write src/**/*.{js,ts}",
+    "typecheck": "tsc --noEmit --noUnusedLocals",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "src/**/*.{js,ts}": [
+      "eslint",
+      "prettier --check"
+    ]
+  },
+  "keywords": [
+    "Kamil",
+    "Hello",
+    "Bot"
+  ],
+  "author": "maxbarsukov",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^18.15.3",
+    "@types/node-telegram-bot-api": "^0.61.3",
+    "@types/promise-queue": "^2.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.7.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.0",
+    "prettier": "^2.8.4",
+    "tsc-watch": "^6.0.0",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "extensionless": "^1.1.5",
+    "lodash": "^4.17.21",
+    "node-fetch": "^3.3.1",
+    "node-telegram-bot-api": "^0.60.0",
+    "promise-queue": "^2.2.5"
+  },
+  "packageManager": "yarn@3.5.0"
+}
