@@ -9,16 +9,18 @@
     "build:debug": "tsc --build && tsc --sourceMap",
     "dev": "tsc-watch --onSuccess \"node --experimental-loader=extensionless dist/index.js\"",
     "start": "node --experimental-loader=extensionless dist/index.js",
-    "lint": "eslint src/**/*.{js,ts}",
-    "lint:fix": "eslint --fix src/**/*.{js,ts}",
-    "format": "prettier --check src/**/*.{js,ts}",
-    "format:fix": "prettier --write src/**/*.{js,ts}",
+    "bstart": "yarn run build && yarn run start",
+    "lint": "eslint \"src/**/*.{js,ts}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{js,ts}\"",
+    "format": "prettier --debug-check \"src/**/*.{js,ts}\"",
+    "format:fix": "prettier --write \"src/**/*.{js,ts}\"",
     "typecheck": "tsc --noEmit --noUnusedLocals",
     "prepare": "husky install"
   },
   "lint-staged": {
     "src/**/*.{js,ts}": [
-      "eslint"
+      "eslint",
+      "prettier"
     ]
   },
   "keywords": [
