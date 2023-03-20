@@ -2,7 +2,7 @@ import TelegramBot from "node-telegram-bot-api";
 import _ from "lodash";
 
 import Dictionary from "./dictionaries/Dictionary";
-import { DELICIOUS, PLEADING_FACE, SHY_FINGERS } from "./utils/emojis";
+import {DELICIOUS, PLEADING_FACE, SHY_FINGERS} from "./utils/emojis";
 
 export default class GreetingGenerator {
   private dictionary: Dictionary;
@@ -18,12 +18,22 @@ export default class GreetingGenerator {
       this.name = this.dictionary.get(message.from.username);
     }
 
-    return _.compact([this.hello(message), this.smalltalk(message), this.last()])
+    return _.compact([
+      this.hello(message),
+      this.smalltalk(message),
+      this.last(),
+    ]);
   }
 
   private hello(_message: TelegramBot.Message) {
     const welcomes = [
-      "Привет", "Привет!", "привет", "По моей проверочке", "Привет, как дела?", "снова привет)", "приветик"
+      "Привет",
+      "Привет!",
+      "привет",
+      "По моей проверочке",
+      "Привет, как дела?",
+      "снова привет)",
+      "приветик",
     ];
 
     if (!this.name) {
@@ -45,10 +55,10 @@ export default class GreetingGenerator {
       `${this.name}, привет!`,
       `${this.name}, привет, как дела?`,
       `${this.name}, привет, что делаешь?`,
-      `${this.name} привет, что делаешь?`,
+      `${this.name} привет, что делаешь?`
     );
 
-    const welcome =  _.sample(welcomes);
+    const welcome = _.sample(welcomes);
     if (welcome?.includes("дел")) this.alreadySmalltalk = true;
 
     const rand = Math.random();
@@ -60,7 +70,7 @@ export default class GreetingGenerator {
       return welcome + " " + PLEADING_FACE + SHY_FINGERS;
     } else if (rand < 1.0 / 2) {
       return welcome + " " + PLEADING_FACE + PLEADING_FACE + PLEADING_FACE;
-    } else  {
+    } else {
       return welcome;
     }
   }
@@ -94,7 +104,7 @@ export default class GreetingGenerator {
       `Чем занимаешься ${this.name}?`,
     ];
 
-    return  _.sample(smalltalks);
+    return _.sample(smalltalks);
   }
 
   private last() {
@@ -108,14 +118,14 @@ export default class GreetingGenerator {
     } else if (rand < 1.0 / 4) {
       return PLEADING_FACE + SHY_FINGERS;
     } else if (rand < 1.0 / 3) {
-      return  PLEADING_FACE + PLEADING_FACE + SHY_FINGERS + SHY_FINGERS;
+      return PLEADING_FACE + PLEADING_FACE + SHY_FINGERS + SHY_FINGERS;
     } else if (rand < 1.0 / 2.5) {
       return PLEADING_FACE + PLEADING_FACE + PLEADING_FACE;
     } else if (rand < 1.0 / 2) {
       return DELICIOUS;
     } else if (rand < 1.0 / 1.5) {
       return DELICIOUS + DELICIOUS + DELICIOUS;
-    } else  {
+    } else {
       return "";
     }
   }
