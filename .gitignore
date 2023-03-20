@@ -137,6 +137,7 @@ dist
 
 # Misc
 .DS_Store
+.wakatime-project
 
 # Config files
 config/local*.json
