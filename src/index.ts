@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 
 import GreetingGenerator from "./GreetingGenerator";
 import FemaleNamesDictionary from "./dictionaries/FemaleNamesDictionary";
+import { PLEADING_FACE } from "./utils/emojis";
 
 async function main() {
   dotenv.config();
@@ -41,9 +42,19 @@ async function main() {
   bot.on("new_chat_members", (message, _meta) => {
     generator.generate(message).forEach((msg, index) => {
       const options =
-        index == 0 ? {reply_to_message_id: message.message_id} : {};
+        index == 0 ? { reply_to_message_id: message.message_id } : {};
       bot.sendMessage(message.chat.id, msg, options);
     });
+  });
+
+  bot.on("message", (message) => {
+    if (process.env.BOT_DEBUG === "true") {
+      bot.sendMessage(message.chat.id, PLEADING_FACE, { reply_to_message_id: message.message_id });
+    }
+
+    if (Math.floor(Math.random() * 1000) + 1 === 69) {
+      bot.sendMessage(message.chat.id, `Покорми меня ${PLEADING_FACE}`, { reply_to_message_id: message.message_id });
+    }
   });
 
   bot.on("polling_error", (msg) => console.log(msg));
