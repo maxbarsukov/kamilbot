@@ -134,6 +134,7 @@ dist
 !package.json
 !yarn.lock
 !.yarnrc
+!dist/
 
 
 # Misc

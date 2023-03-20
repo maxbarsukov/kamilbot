@@ -1,27 +1,15 @@
-# Builder stage
-FROM node:lts-alpine AS builder
-
-RUN npm install -g yarn
-
-WORKDIR /app
-
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
-
-COPY . .
-RUN yarn build
-
-
-# Runner stage
 FROM node:lts-alpine
 
-RUN npm install -g yarn
+ENV HOME /usr/src/
+WORKDIR $HOME
 
-WORKDIR /app
+COPY ["yarn-offline-mirror", "$HOME/yarn-offline-mirror/"]
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY ["package.json", "yarn.lock", ".yarnrc", "$HOME/"]
 
-COPY --from=builder /app/dist ./dist
+RUN yarn install --offline --frozen-lockfile --link-duplicates
 
+COPY . $HOME
+
+RUN yarn build
 CMD yarn start
