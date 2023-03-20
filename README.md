@@ -8,7 +8,7 @@ English ｜ [Русский](README.ru.md)
 [![moment 1](./docs/img/kamil3.jpg)](./docs/img/kamil3.jpg)
 [![moment 2](./docs/img/kamil4.jpg)](./docs/img/kamil4.jpg)
 
-> Покорми меня 🥺
+> Покорми меня 🥺 by [Камиль](https://t.me/kamilonly)
 
 ## Table of contents
 1. [Updates](#updates)
