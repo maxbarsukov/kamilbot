@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+set -e
+
+export $(grep -v '^#' .env | xargs)
+
+docker-compose up --detach
+docker-compose exec -T kamilbot yarn lint
+docker-compose stop

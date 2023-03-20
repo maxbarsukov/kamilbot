@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+set -e
+
+if [ ! -f .env ]; then
+  cp .env.example .env
+fi
+
+export $(grep -v '^#' .env | xargs)
+
+docker-compose up --detach
+docker-compose stop
