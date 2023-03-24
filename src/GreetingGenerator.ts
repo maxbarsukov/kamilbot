@@ -13,19 +13,22 @@ export default class GreetingGenerator {
     this.dictionary = dictionary;
   }
 
+  public getNewName(message: TelegramBot.Message) {
+    if (message.from?.username) {
+      return this.dictionary.get(message.from.username);
+    }
+    return "No name from dictionary";
+  }
+
   public generate(message: TelegramBot.Message) {
     if (message.from?.username) {
       this.name = this.dictionary.get(message.from.username);
     }
 
-    return _.compact([
-      this.hello(message),
-      this.smalltalk(message),
-      this.last(),
-    ]);
+    return _.compact([this.hello(), this.smalltalk(), this.last()]);
   }
 
-  private hello(_message: TelegramBot.Message) {
+  private hello() {
     const welcomes = [
       "Привет",
       "Привет!",
@@ -75,7 +78,7 @@ export default class GreetingGenerator {
     }
   }
 
-  private smalltalk(_message: TelegramBot.Message) {
+  private smalltalk() {
     if (this.alreadySmalltalk) {
       if (Math.random() < 1.0 / 3) {
         return "Чем занимаешься?";
