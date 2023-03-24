@@ -13,5 +13,5 @@ export default pino(
       },
     },
   },
-  pino.destination("./log/bot.log"),
+  pino.destination("./log/bot.log")
 );
