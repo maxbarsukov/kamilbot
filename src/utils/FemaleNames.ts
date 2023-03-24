@@ -113,6 +113,10 @@ const dictionary: {[key: string]: string} = {
   lera: "Лерочка",
   лера: "Лерочка",
 
+  макс: "Максик",
+  максим: "Максик",
+  maxim: "Максик",
+
   unknown: "",
 };
 
