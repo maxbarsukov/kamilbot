@@ -22,12 +22,8 @@ export default class GreetingGenerator {
   }
 
   public generate(message: TelegramBot.Message) {
-    if (message.from?.username) {
-      const name = this.getNewName(message);
-      if (!name) {
-        this.name = name;
-      }
-    }
+    const name = this.getNewName(message);
+    this.name = name;
 
     return _.compact([this.hello(), this.smalltalk(), this.last()]);
   }
