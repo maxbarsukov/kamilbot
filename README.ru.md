@@ -22,6 +22,14 @@
 
 ## Обновления <a name="updates"></a>
 
+<strong>🎉 v2 был выпущен!</strong>
+<details open>
+  <summary><b>🔔 24 марта 2023 (v0.2.0)</b></summary>
+
+> - Исправлены некоторые ошибка, обновлены случайные сообщения.
+</details>
+
+
 <strong>🎉 v1 был выпущен!</strong>
 <details open>
   <summary><b>🔔 20 марта 2023 (v0.1.0)</b></summary>

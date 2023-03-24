@@ -22,11 +22,18 @@ English ｜ [Русский](README.ru.md)
 
 ## Updates <a name="updates"></a>
 
+<strong>🎉 v2 has been released!</strong>
+<details open>
+  <summary><b>🔔 Mar. 24, 2023 (v0.2.0)</b></summary>
+
+> - Fix some bugs, update random messages.
+</details>
+
 <strong>🎉 v1 has been released!</strong>
 <details open>
   <summary><b>🔔 Mar. 20, 2023 (v0.1.0)</b></summary>
 
-> - Create bot, add basic names and name detector. 
+> - Create bot, add basic names and name detector.
 </details>
 
 ## Getting Started <a name="getting-started"></a>
