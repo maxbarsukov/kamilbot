@@ -73,6 +73,8 @@ export default class GreetingGenerator {
       return welcome + " " + PLEADING_FACE + SHY_FINGERS;
     } else if (rand < 1.0 / 2) {
       return welcome + " " + PLEADING_FACE + PLEADING_FACE + PLEADING_FACE;
+    } else if (rand < 1.0 / 1.5) {
+      return welcome + " " + DELICIOUS;
     } else {
       return welcome;
     }
@@ -80,7 +82,7 @@ export default class GreetingGenerator {
 
   private smalltalk() {
     if (this.alreadySmalltalk) {
-      if (Math.random() < 1.0 / 3) {
+      if (Math.random() < 1.0 / 4) {
         return "Чем занимаешься?";
       }
       return "";
@@ -97,14 +99,13 @@ export default class GreetingGenerator {
       "Чем занимаешься?",
       "чем занимаешься?",
       `${this.name} что делаешь?`,
-      `${this.name} как дела?`,
       `${this.name} чем занимаешься?`,
       `${this.name}, что делаешь?`,
       `${this.name}, как дела?`,
       `${this.name}, чем занимаешься?`,
-      `Что делаешь ${this.name}?`,
+      `Что делаешь, ${this.name}?`,
       `Как дела, ${this.name}?`,
-      `Чем занимаешься ${this.name}?`,
+      `Чем занимаешься, ${this.name}?`,
     ];
 
     return _.sample(smalltalks);
@@ -115,21 +116,13 @@ export default class GreetingGenerator {
       return "";
     }
 
-    const rand = Math.random();
-    if (rand < 1.0 / 8) {
-      return PLEADING_FACE;
-    } else if (rand < 1.0 / 4) {
-      return PLEADING_FACE + SHY_FINGERS;
-    } else if (rand < 1.0 / 3) {
-      return PLEADING_FACE + PLEADING_FACE + SHY_FINGERS + SHY_FINGERS;
-    } else if (rand < 1.0 / 2.5) {
-      return PLEADING_FACE + PLEADING_FACE + PLEADING_FACE;
-    } else if (rand < 1.0 / 2) {
-      return DELICIOUS;
-    } else if (rand < 1.0 / 1.8) {
-      return DELICIOUS + DELICIOUS + DELICIOUS;
-    } else {
-      return PLEADING_FACE;
-    }
+    return _.sample([
+      PLEADING_FACE,
+      PLEADING_FACE + SHY_FINGERS,
+      PLEADING_FACE + PLEADING_FACE + SHY_FINGERS + SHY_FINGERS,
+      PLEADING_FACE + PLEADING_FACE + PLEADING_FACE,
+      DELICIOUS,
+      DELICIOUS + DELICIOUS + DELICIOUS,
+    ]);
   }
 }

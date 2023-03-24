@@ -6,6 +6,33 @@ import FemaleNamesDictionary from "./dictionaries/FemaleNamesDictionary";
 import logger from "./utils/logger";
 import {PLEADING_FACE} from "./utils/emojis";
 
+function newMember(bot: TelegramBot, message: TelegramBot.Message) {
+  const generator = new GreetingGenerator(new FemaleNamesDictionary());
+  const answer = generator.generate(message);
+
+  const context = {
+    message_id: message.message_id,
+    from_user: message.from?.username,
+  };
+
+  logger.info(
+    {...context, new_username: generator.getNewName(message)},
+    `New user: ${message.from?.username}, ${message.from?.first_name}, ${message.from?.last_name}`
+  );
+  logger.info(context, `Answer: "${answer}"`);
+
+  bot
+    .sendMessage(message.chat.id, answer[0], {
+      reply_to_message_id: message.message_id,
+    })
+    .then(() => {
+      if (answer[1]) return bot.sendMessage(message.chat.id, answer[1]);
+    })
+    .then(() => {
+      if (answer[2]) return bot.sendMessage(message.chat.id, answer[2]);
+    });
+}
+
 async function main() {
   logger.info("KamilBot started...");
 
@@ -41,27 +68,9 @@ async function main() {
   });
 
   const PING_MESSAGE = "Камильчик";
-  const generator = new GreetingGenerator(new FemaleNamesDictionary());
 
   bot.on("new_chat_members", (message) => {
-    logger.info(
-      {
-        message_id: message.message_id,
-        from_user: message.from?.username,
-        new_username: generator.getNewName(message),
-      },
-      `New user: ${message.from?.username}, ${message.from?.first_name}, ${message.from?.last_name}`
-    );
-    logger.info(
-      {message_id: message.message_id, from_user: message.from?.username},
-      `Answer: "${generator.generate(message)}"`
-    );
-
-    generator.generate(message).forEach((msg, index) => {
-      const options =
-        index == 0 ? {reply_to_message_id: message.message_id} : {};
-      bot.sendMessage(message.chat.id, msg, options);
-    });
+    newMember(bot, message);
   });
 
   bot.on("message", (message) => {
@@ -71,18 +80,7 @@ async function main() {
     };
 
     if (message?.text?.toLowerCase().includes("камиль, поздоровайся")) {
-      logger.info(context, "SAY_HELLO");
-      logger.info(
-        {...context, new_username: generator.getNewName(message)},
-        `User: ${message.from?.username}, ${message.from?.first_name}, ${message.from?.last_name}`
-      );
-      logger.info(context, `Answer: "${generator.generate(message)}"`);
-
-      generator.generate(message).forEach((msg, index) => {
-        const options =
-          index == 0 ? {reply_to_message_id: message.message_id} : {};
-        bot.sendMessage(message.chat.id, msg, options);
-      });
+      newMember(bot, message);
     }
 
     if (
