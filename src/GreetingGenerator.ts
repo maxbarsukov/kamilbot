@@ -14,15 +14,16 @@ export default class GreetingGenerator {
   }
 
   public getNewName(message: TelegramBot.Message) {
-    if (message.from?.username) {
+    if (message.from?.first_name)
+      return this.dictionary.get(message.from?.first_name);
+    if (message.from?.username)
       return this.dictionary.get(message.from.username);
-    }
-    return "No name from dictionary";
+    return undefined;
   }
 
   public generate(message: TelegramBot.Message) {
     if (message.from?.username) {
-      const name = this.dictionary.get(message.from.username);
+      const name = this.getNewName(message);
       if (!name) {
         this.name = name;
       }

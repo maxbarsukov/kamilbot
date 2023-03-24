@@ -50,7 +50,7 @@ async function main() {
         from_user: message.from?.username,
         new_username: generator.getNewName(message),
       },
-      `New user: ${message.from?.username}`
+      `New user: ${message.from?.username}, ${message.from?.first_name}, ${message.from?.last_name}`
     );
     logger.info(
       {message_id: message.message_id, from_user: message.from?.username},
@@ -74,7 +74,7 @@ async function main() {
       logger.info(context, "SAY_HELLO");
       logger.info(
         {...context, new_username: generator.getNewName(message)},
-        `New user: ${message.from?.username}`
+        `User: ${message.from?.username}, ${message.from?.first_name}, ${message.from?.last_name}`
       );
       logger.info(context, `Answer: "${generator.generate(message)}"`);
 
