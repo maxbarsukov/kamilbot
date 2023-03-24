@@ -70,6 +70,21 @@ async function main() {
       from_user: message.from?.username,
     };
 
+    if (message?.text?.toLowerCase().includes("камиль, поздоровайся")) {
+      logger.info(context, "SAY_HELLO");
+      logger.info(
+        {...context, new_username: generator.getNewName(message)},
+        `New user: ${message.from?.username}`
+      );
+      logger.info(context, `Answer: "${generator.generate(message)}"`);
+
+      generator.generate(message).forEach((msg, index) => {
+        const options =
+          index == 0 ? {reply_to_message_id: message.message_id} : {};
+        bot.sendMessage(message.chat.id, msg, options);
+      });
+    }
+
     if (
       message?.text?.includes(PING_MESSAGE) ||
       message?.text?.includes(PING_MESSAGE.toLowerCase())
