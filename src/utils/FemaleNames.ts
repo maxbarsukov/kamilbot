@@ -112,6 +112,8 @@ const dictionary: {[key: string]: string} = {
 
   lera: "Лерочка",
   лера: "Лерочка",
+
+  unknown: "",
 };
 
 export default dictionary;
