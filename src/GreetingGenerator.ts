@@ -129,10 +129,10 @@ export default class GreetingGenerator {
       return PLEADING_FACE + PLEADING_FACE + PLEADING_FACE;
     } else if (rand < 1.0 / 2) {
       return DELICIOUS;
-    } else if (rand < 1.0 / 1.5) {
+    } else if (rand < 1.0 / 1.8) {
       return DELICIOUS + DELICIOUS + DELICIOUS;
     } else {
-      return "";
+      return PLEADING_FACE;
     }
   }
 }
