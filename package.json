@@ -50,7 +50,7 @@
     "extensionless": "^1.1.5",
     "lodash": "^4.17.21",
     "node-fetch": "^3.3.1",
-    "node-telegram-bot-api": "^0.60.0",
+    "node-telegram-bot-api": "^0.61.0",
     "pino": "^8.11.0",
     "pino-pretty": "^10.0.0",
     "promise-queue": "^2.2.5"
