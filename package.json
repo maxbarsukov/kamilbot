@@ -31,7 +31,7 @@
   "author": "maxbarsukov",
   "license": "MIT",
   "devDependencies": {
-    "@types/lodash": "^4.14.191",
+    "@types/lodash": "^4.14.195",
     "@types/node": "^18.15.3",
     "@types/node-telegram-bot-api": "^0.61.3",
     "@types/promise-queue": "^2.2.0",
