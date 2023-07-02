@@ -103,6 +103,9 @@ async function main() {
       bot.sendMessage(
         message.chat.id,
         `Раб Божий Нулон молвил:\n«${message?.text}»\n\nГой еси, добрый молодец!`,
+        {
+          reply_to_message_id: message.message_id,
+        }
       );
     }
 
