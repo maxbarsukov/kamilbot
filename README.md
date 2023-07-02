@@ -24,6 +24,12 @@ English ｜ [Русский](README.ru.md)
 
 <strong>🎉 v2 has been released!</strong>
 <details open>
+  <summary><b>🔔 Jul. 2, 2023 (v0.3.0)</b></summary>
+
+> - Add nylon logging. Literally 1984.
+</details>
+
+<details open>
   <summary><b>🔔 Mar. 24, 2023 (v0.2.0)</b></summary>
 
 > - Fix some bugs, update random messages.

@@ -33,6 +33,21 @@ function newMember(bot: TelegramBot, message: TelegramBot.Message) {
     });
 }
 
+function containsNylon(text?: string): boolean {
+  if (!text) return false;
+  return text.includes("nylon")
+      || text.includes("sodamntired")
+      || text.includes("damnlinks");
+}
+
+function isNylonMessage(message: TelegramBot.Message): boolean {
+  if (!message?.from) return false;
+  if (message?.from?.username == "nyapsilon" && message.text?.includes("nylon")) return true;
+
+  const { username, first_name, last_name } = message.from;
+  return [username, first_name, last_name].map(containsNylon).some(Boolean);
+}
+
 async function main() {
   logger.info("KamilBot started...");
 
@@ -81,6 +96,14 @@ async function main() {
 
     if (message?.text?.toLowerCase().includes("камиль, поздоровайся")) {
       newMember(bot, message);
+    }
+
+    if (isNylonMessage(message)) {
+      logger.info(context, "Nylon said something!");
+      bot.sendMessage(
+        message.chat.id,
+        `Раб Божий Нулон молвил:\n«${message?.text}»\n\nГой еси, добрый молодец!`,
+      );
     }
 
     if (
