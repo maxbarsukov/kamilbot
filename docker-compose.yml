@@ -8,3 +8,22 @@ services:
       dockerfile: Dockerfile
     env_file: .env
     restart: unless-stopped
+    networks:
+      - app-network
+
+  database:
+    image: nouchka/sqlite3:latest
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./db:/root/db/
+    networks:
+      - app-network
+
+volumes:
+  database_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
