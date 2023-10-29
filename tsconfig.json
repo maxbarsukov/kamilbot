@@ -1,5 +1,14 @@
 {
   "compilerOptions": {
+    "lib": [
+      "es6",
+      "ES2020"
+    ],
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+        "@/*": ["./src/*"]
+    },
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
@@ -9,7 +18,10 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
-    "typeRoots": ["node_modules/@types", "src/@types"]
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "typeRoots": ["node_modules/@types", "src/@types"],
+    "sourceMap": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
