@@ -1,8 +1,8 @@
 import TelegramBot from "node-telegram-bot-api";
 import _ from "lodash";
 
-import Dictionary from "./dictionaries/Dictionary";
-import {DELICIOUS, PLEADING_FACE, SHY_FINGERS} from "./utils/emojis";
+import Dictionary from "@/dictionaries/Dictionary";
+import {DELICIOUS, PLEADING_FACE, SHY_FINGERS} from "@/utils/emojis";
 
 export default class GreetingGenerator {
   private dictionary: Dictionary;

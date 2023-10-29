@@ -1,5 +1,5 @@
-import Dictionary from "./Dictionary";
-import names from "../utils/FemaleNames";
+import Dictionary from "@/dictionaries/Dictionary";
+import names from "@/utils/FemaleNames";
 
 export default class FemaleNamesDictionary extends Dictionary {
   public get(key: string) {

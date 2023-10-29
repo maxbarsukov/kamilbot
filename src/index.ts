@@ -1,37 +1,10 @@
 import TelegramBot from "node-telegram-bot-api";
 import dotenv from "dotenv";
 
-import GreetingGenerator from "./GreetingGenerator";
-import FemaleNamesDictionary from "./dictionaries/FemaleNamesDictionary";
-import logger from "./utils/logger";
-import {PLEADING_FACE} from "./utils/emojis";
-
-function newMember(bot: TelegramBot, message: TelegramBot.Message) {
-  const generator = new GreetingGenerator(new FemaleNamesDictionary());
-  const answer = generator.generate(message);
-
-  const context = {
-    message_id: message.message_id,
-    from_user: message.from?.username,
-  };
-
-  logger.info(
-    {...context, new_username: generator.getNewName(message)},
-    `New user: ${message.from?.username}, ${message.from?.first_name}, ${message.from?.last_name}`
-  );
-  logger.info(context, `Answer: "${answer}"`);
-
-  bot
-    .sendMessage(message.chat.id, answer[0], {
-      reply_to_message_id: message.message_id,
-    })
-    .then(() => {
-      if (answer[1]) return bot.sendMessage(message.chat.id, answer[1]);
-    })
-    .then(() => {
-      if (answer[2]) return bot.sendMessage(message.chat.id, answer[2]);
-    });
-}
+import { AppDataSource } from "@/data-source";
+import logger from "@/utils/logger";
+import newMember from "@/handlers/newMember";
+import { PLEADING_FACE } from "@/utils/emojis";
 
 function containsNylon(text?: string): boolean {
   if (!text) return false;
@@ -84,9 +57,17 @@ async function main() {
 
   const PING_MESSAGE = "Камильчик";
 
-  bot.on("new_chat_members", (message) => {
-    newMember(bot, message);
+  bot.on("message", (message) => {
+    if (message.new_chat_members != undefined) {
+      message.new_chat_members.forEach(member => {
+        // if (member.username == process.env.BOT_NAME) {
+        //   addedToNewChat()
+        // }
+        newMember(bot, message)
+      })
+    }
   });
+
 
   bot.on("message", (message) => {
     const context = {
@@ -123,6 +104,17 @@ async function main() {
       );
     }
 
+    if (message?.text === PLEADING_FACE.repeat(3) && message?.from?.username === 'kamilonly') {
+      logger.info(context, "PLEADING_FACE");
+      bot.sendMessage(
+        message.chat.id,
+        PLEADING_FACE.repeat(3),
+        {
+          reply_to_message_id: message.message_id,
+        }
+      );
+    }
+
     if (process.env.BOT_DEBUG === "true") {
       logger.debug(context, "Debug answering.");
       bot.sendMessage(message.chat.id, PLEADING_FACE, {
@@ -141,7 +133,10 @@ async function main() {
   bot.on("polling_error", (msg) => logger.error(msg));
 }
 
-main().catch((err) => {
-  logger.error(err);
-  process.exit(1);
-});
+AppDataSource.initialize().then(async () => {
+  logger.info("Database loaded.");
+  main().catch((err) => {
+    logger.error(err);
+    process.exit(1);
+  });
+}).catch(error => logger.error(error));
