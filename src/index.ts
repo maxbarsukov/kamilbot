@@ -21,6 +21,37 @@ function isNylonMessage(message: TelegramBot.Message): boolean {
   return [username, first_name, last_name].map(containsNylon).some(Boolean);
 }
 
+function consultationMessage(): string {
+  const consultationTime = () => {
+    const hrs = Math.round(Math.random() * 5) + 5;
+    const mins = [0, 15, 20, 30, 40, 45, 50][Math.floor(Math.random()*7)];
+
+    const hFormat = (hrs < 10 ? "0" : "");
+    const mFormat = (mins < 10 ? "0" : "");
+    return String(hFormat + hrs + ":"  + mFormat + mins+ " PM");
+  }
+
+  const makeZoomPwd = (length: number) => {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+  }
+
+  const d = new Date();
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const date = d.getDate();
+  const month = months[d.getMonth()];
+  const year = d.getFullYear();
+
+  return `Topic: АК - Лаб. ${['1', '2', '3', '4'][Math.floor(Math.random()*4)]} - Консультация\nTime: ${month} ${date}, ${year} ${consultationTime()} ${(Math.random() < 0.4) ? 'Europe/Podgorica' : 'Moscow'}\n\nJoin Zoom Meeting\nhttps://itmo.zoom.us/j/${Array(11).fill(0).map(() => Math.round(Math.random() * 9)).join('')}?pwd=${makeZoomPwd(30)}.1`;
+}
+
 async function main() {
   logger.info("KamilBot started...");
 
@@ -87,10 +118,28 @@ async function main() {
       );
     }
 
-    if (message?.text?.endsWith("?")) {
+    if (message?.text?.toLowerCase()?.includes("консультация?")) {
+      logger.info(context, "Консультация?");
+      bot.sendMessage(
+        message.chat.id,
+        `Консультация!`,
+        { reply_to_message_id: message.message_id }
+      );
+    }
+
+    if (message?.text?.includes("¿")) {
+      logger.info(context, "EspQuestion¿");
+      bot.sendMessage(
+        message.chat.id,
+        `¡Esta es una consulta en español, amigos míos!`,
+        { reply_to_message_id: message.message_id }
+      );
+    }
+
+    if (!message?.text?.toLowerCase()?.includes("консультация?") && (message?.text?.includes("?") || message?.text?.includes("？")) && !message?.text?.includes("¿")) {
       logger.info(context, "Question");
       const rand = Math.random();
-      if (rand < 0.8) {
+      if (rand < 0.9) {
         bot.sendMessage(
           message.chat.id,
           `Консультация.`,
@@ -103,6 +152,21 @@ async function main() {
           { reply_to_message_id: message.message_id }
         );
       }
+    }
+
+    if (
+      message?.text?.toLowerCase()?.match(/консультаци(?:е[йю]|ям|ями|ях|[ийюя])/)
+        && !message?.from?.username?.includes('kamil')
+        && !message?.text?.toLowerCase()?.includes("консультация?")
+    ) {
+      logger.info(context, "!KAMIL CONSULT");
+      bot.sendMessage(
+        message.chat.id,
+        consultationMessage(),
+        {
+          reply_to_message_id: message.message_id,
+        }
+      );
     }
 
     if (
@@ -133,6 +197,13 @@ async function main() {
     if (process.env.BOT_DEBUG === "true") {
       logger.debug(context, "Debug answering.");
       bot.sendMessage(message.chat.id, PLEADING_FACE, {
+        reply_to_message_id: message.message_id,
+      });
+    }
+
+    if (Math.floor(Math.random() * 100) === 50) {
+      logger.info(context, "Random consulting event.");
+      bot.sendMessage(message.chat.id, `Проконсультируй меня ${PLEADING_FACE}`, {
         reply_to_message_id: message.message_id,
       });
     }
