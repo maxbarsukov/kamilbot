@@ -59,6 +59,5 @@
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.1.6",
     "typeorm": "^0.3.17"
-  },
-  "packageManager": "yarn@3.5.0"
+  }
 }
