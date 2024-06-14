@@ -59,10 +59,7 @@ async function main() {
 
   bot.on("message", (message) => {
     if (message.new_chat_members != undefined) {
-      message.new_chat_members.forEach(member => {
-        // if (member.username == process.env.BOT_NAME) {
-        //   addedToNewChat()
-        // }
+      message.new_chat_members.forEach(() => {
         newMember(bot, message)
       })
     }
@@ -88,6 +85,24 @@ async function main() {
           reply_to_message_id: message.message_id,
         }
       );
+    }
+
+    if (message?.text?.endsWith("?")) {
+      logger.info(context, "Question");
+      const rand = Math.random();
+      if (rand < 0.8) {
+        bot.sendMessage(
+          message.chat.id,
+          `Консультация.`,
+          { reply_to_message_id: message.message_id }
+        );
+      } else {
+        bot.sendMessage(
+          message.chat.id,
+          `- Изя, ты ж юрист, хотел у тебя спросить. У меня тут сложилась такая неприятная ситуация...\n- Подожди, Мойше, тебе нужен совет или консультация?\n- А в чем разница?\n- Совет бесплатно, а консультация за за деньги.\n- Конечно, мне нужен твой совет!\n- Мой тебе совет: запишись на консультацию.`,
+          { reply_to_message_id: message.message_id }
+        );
+      }
     }
 
     if (
