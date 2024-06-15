@@ -5,6 +5,29 @@ import { AppDataSource } from "@/data-source";
 import logger from "@/utils/logger";
 import newMember from "@/handlers/newMember";
 import { PLEADING_FACE } from "@/utils/emojis";
+import { containsMathExpr, getMathExprs, computeMathExpr } from "@/utils/math";
+
+const MAX_MSG_LENGTH = 4096;
+const TIMEOUT = 200;
+
+function withTimeout<T>(promise: Promise<T>, timeoutMessage: string, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error(timeoutMessage));
+    }, ms);
+
+    promise.then(
+      (result) => {
+        clearTimeout(timeout);
+        resolve(result);
+      },
+      (error) => {
+        clearTimeout(timeout);
+        reject(error);
+      }
+    );
+  });
+}
 
 function containsNylon(text?: string): boolean {
   if (!text) return false;
@@ -118,13 +141,62 @@ async function main() {
       );
     }
 
+    // like `1 + 1`
+    if (containsMathExpr(message?.text?.toLowerCase())) {
+      logger.info(context, ">> MATH EXPR");
+
+      const computeRequest = (): Promise<void> => {
+        return new Promise((resolve) => {
+          const mes = getMathExprs(message?.text?.toLowerCase());
+
+          if (mes !== null && mes?.length > 0) {
+            mes.forEach(me => {
+              const answer: string = computeMathExpr(me);
+
+              for (let i = 0, charsLength = answer.length; i < charsLength; i += MAX_MSG_LENGTH) {
+                bot.sendMessage(
+                  message.chat.id,
+                  answer.substring(i, i + MAX_MSG_LENGTH),
+                  { reply_to_message_id: message.message_id }
+                );
+              }
+            });
+          }
+
+          resolve();
+        });
+      }
+
+      (async () => {
+        try {
+          await withTimeout(computeRequest(), `Не могу вычислить решение, высокая занятость ${PLEADING_FACE}`, TIMEOUT);
+        } catch (error: unknown) {
+          const err = error as Error;
+          logger.warn(context, '!! MATH EXPR TIMEOUT');
+          bot.sendMessage(
+            message.chat.id,
+            err.message,
+            { reply_to_message_id: message.message_id }
+          );
+        }
+      })();
+
+      logger.info(context, ">> AFTER MATH EXPR");
+    }
+
     if (message?.text?.toLowerCase()?.includes("консультация?")) {
       logger.info(context, "Консультация?");
-      bot.sendMessage(
-        message.chat.id,
-        `Консультация!`,
-        { reply_to_message_id: message.message_id }
-      );
+      const rand = Math.random();
+      let msg;
+      if (rand < 0.7) {
+        msg = 'Консультация!'
+      } else if (rand < 0.8) {
+        msg = 'Г';
+      } else {
+        msg = 'Ж';
+      }
+
+      bot.sendMessage(message.chat.id, msg, { reply_to_message_id: message.message_id });
     }
 
     if (message?.text?.includes("¿")) {
@@ -201,7 +273,7 @@ async function main() {
       });
     }
 
-    if (Math.floor(Math.random() * 100) === 50) {
+    if (Math.floor(Math.random() * 100) === 50 || message?.text?.includes("Кому нужна консультация?")) {
       logger.info(context, "Random consulting event.");
       bot.sendMessage(message.chat.id, `Проконсультируй меня ${PLEADING_FACE}`, {
         reply_to_message_id: message.message_id,
