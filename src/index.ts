@@ -1,4 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
+import { Worker } from "worker_threads";
 import dotenv from "dotenv";
 
 import { AppDataSource } from "@/data-source";
@@ -146,26 +147,43 @@ async function main() {
       logger.info(context, ">> MATH EXPR");
 
       const computeRequest = (): Promise<void> => {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
           const mes = getMathExprs(message?.text?.toLowerCase());
 
           if (mes !== null && mes?.length > 0) {
-            mes.forEach(me => {
-              const answer: string = computeMathExpr(me);
+            const worker = new Worker('./workers/calculator.ts');
+            worker.postMessage(mes);
 
-              for (let i = 0, charsLength = answer.length; i < charsLength; i += MAX_MSG_LENGTH) {
-                bot.sendMessage(
-                  message.chat.id,
-                  answer.substring(i, i + MAX_MSG_LENGTH),
-                  { reply_to_message_id: message.message_id }
-                );
+            worker.on('message', (result) => {
+              result.forEach((answer: string) => {
+                for (let i = 0, charsLength = answer.length; i < charsLength; i += MAX_MSG_LENGTH) {
+                  bot.sendMessage(
+                    message.chat.id,
+                    answer.substring(i, i + MAX_MSG_LENGTH),
+                    { reply_to_message_id: message.message_id }
+                  );
+                }
+              });
+
+              resolve(result);
+              worker.terminate();
+            });
+
+            worker.on('error', (error) => {
+              reject(error);
+              worker.terminate();
+            });
+
+            worker.on('exit', (code) => {
+              if (code !== 0) {
+                reject(new Error(`Worker stopped with exit code ${code}`));
               }
             });
+          } else {
+            reject(new Error("!!! No math expressions found"));
           }
-
-          resolve();
         });
-      }
+      };
 
       (async () => {
         try {
